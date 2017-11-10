@@ -78,21 +78,23 @@ def playlist_Items(iL,maxR,filePIL,playList):
 	while True:
 		if firstPIL:	# First request
 			playItemsList = playlist_items_list_by_playlist_id(client,
-													part='snippet,contentDetails',
-													maxResults=maxR,
-													playlistId=playList['items'][iL]['id'])
+									part='snippet,contentDetails',
+									maxResults=maxR,
+									playlistId=playList['items'][iL]['id'])
 			filePIL.write("Number of playlist items: "+str(playItemsList['pageInfo']['totalResults'])+"\n\n")
 			firstPIL = 0
 		else:	# Every other request
 			playItemsList = playlist_items_list_by_playlist_id(client,
-													part='snippet,contentDetails',
-													maxResults=maxR,
-													pageToken=PILnPToken,
-													playlistId=playList['items'][iL]['id'])
+									part='snippet,contentDetails',
+									maxResults=maxR,
+									pageToken=PILnPToken,
+									playlistId=playList['items'][iL]['id'])
 	
 		# Write playlist videos to file.
 		for iPIL in range(0,len(playItemsList['items'])):
-			filePIL.write(str(playItemNum)+":\t"+str(playItemsList['items'][iPIL]['snippet']['title'])+"\t"+"https://www.youtube.com/watch?v="+str(playItemsList['items'][iPIL]['snippet']['resourceId']['videoId'])+"\n")
+			filePIL.write(str(playItemNum)+":\t"+str(playItemsList['items'][iPIL]['snippet']['title'])+
+				      "\t"+"https://www.youtube.com/watch?v="+
+				      str(playItemsList['items'][iPIL]['snippet']['resourceId']['videoId'])+"\n")
 			playItemNum += 1
 		
 		
@@ -125,17 +127,17 @@ def playlist():
 	while True:
 		if firstPL:	# First request
 			playList = playlists_list_mine(client,
-										part='snippet,contentDetails',
-										maxResults=maxR,
-										mine=True)
+						part='snippet,contentDetails',
+						maxResults=maxR,
+						mine=True)
 			filePL.write("Number of playlist: "+str(playList['pageInfo']['totalResults'])+"\n\n\n\n\n")
 			firstPL = 0
 		else:	# Every other request
 			playList = playlists_list_mine(client,
-										part='snippet,contentDetails',
-										maxResults=maxR,
-										pageToken=PLnPToken,
-										mine=True)
+						part='snippet,contentDetails',
+						maxResults=maxR,
+						pageToken=PLnPToken,
+						mine=True)
 
 		# Get the videos in each playlist
 		for iPL in range(0,len(playList['items'])):
@@ -175,24 +177,26 @@ def subscription():
 	while True:
 		if firstS:	# First request
 			subList = subscriptions_list_my_subscriptions(client,
-											part='snippet,contentDetails',
-											maxResults=maxR,
-											order='alphabetical',
-											mine=True)
+								part='snippet,contentDetails',
+								maxResults=maxR,
+								order='alphabetical',
+								mine=True)
 			fileS.write("Number of subscriptions: "+str(subList['pageInfo']['totalResults'])+"\n\n")
 			firstS = 0
 		else:	# Every other request
 			subList = subscriptions_list_my_subscriptions(client,
-											part='snippet,contentDetails',
-											maxResults=maxR,
-											pageToken=SnPToken,
-											order='alphabetical',
-											mine=True)	
+								part='snippet,contentDetails',
+								maxResults=maxR,
+								pageToken=SnPToken,
+								order='alphabetical',
+								mine=True)	
 			subRequest += 1
 		
 		# Write channel subscriptions to file.
 		for iS in range(0,len(subList['items'])):		
-			fileS.write(str(subNum)+":\t"+subList['items'][iS]['snippet']['title']+"\t"+"https://www.youtube.com/channel/"+subList['items'][iS]['snippet']['resourceId']['channelId']+"\n")
+			fileS.write(str(subNum)+":\t"+subList['items'][iS]['snippet']['title']+
+				    "\t"+"https://www.youtube.com/channel/"+subList['items'][iS]['snippet']['resourceId']['channelId']+
+				    "\n")
 			subNum += 1
 		
 		try: # Is this the last request? Yes = continue. No = Make another request
@@ -225,9 +229,14 @@ if __name__ == '__main__':
 	
 	
 	# YouTube's ToS 4H 
-	# "You agree not to use or launch any automated system, including without limitation, "robots," "spiders," or "offline readers," that accesses the Service in a manner that sends more request messages to the YouTube servers in a given period of time than a human can reasonably produce in the same period by using a conventional on-line web browser."
+	# "You agree not to use or launch any automated system, including without limitation, "robots," "spiders," or 
+	# "offline readers," that accesses the Service in a manner that sends more request messages to the YouTube servers 
+	# in a given period of time than a human can reasonably produce in the same period by using a conventional on-line 
+	# web browser."
 	#
-	# This means that we can't do this as quickly as we can process the data. Google/YouTube.... really? Scared of a DDOS? So i've added a small delay between each request so that Google/YouTube doesn't suspend/ban the account.
+	# This means that we can't do this as quickly as we can process the data. Google/YouTube.... really? 
+	# Scared of a DDOS? So i've added a small delay between each request so that Google/YouTube doesn't suspend/ban 
+	# the account.
 	
 	
 	
